@@ -51,7 +51,7 @@ export default function RootLayout({
 
   return (
     <html>
-      <body>
+      <body style={{ backgroundColor: '#4754dfff' }}>
         {sessionStorage.getItem('user') === null ? <Login handleSetIsLogging={handleSetIsLogging} /> :
           <nav>
 

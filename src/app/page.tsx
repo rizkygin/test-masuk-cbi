@@ -8,6 +8,7 @@ import Icons, { searchIcon, plushIcon } from "@/public/icons/icons";
 import { useMediaQuery } from "react-responsive";
 import ModalTambahBarang from "@/src/components/ui/modaltambahbarang";
 import { Button } from "../components/ui/button";
+import { ExportCSV } from "@/src/utils/excel";
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -20,12 +21,55 @@ const styles: Record<string, CSSProperties> = {
     fontSize: '1.5rem',
     fontWeight: 'bold',
   },
+
+  search: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '1rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%'
+  },
+  welcomeContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '1rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  table: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+    margin: '1.5rem'
+  },
+
   tableHeader: {
     display: 'flex',
     flexDirection: 'row',
     gap: '1rem',
     fontWeight: 'bold',
     fontSize: '1.5rem',
+  },
+
+  tableHeaderName: {
+    width: '50%',
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+
+    color: 'white',
+    gap: '1rem'
+  },
+
+  tableHeaders: {
+    width: '20%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
+    color: 'white',
+    flexDirection: 'row',
+    gap: '1rem'
   },
 
   tableRow: {
@@ -35,20 +79,15 @@ const styles: Record<string, CSSProperties> = {
     gap: '0.5rem',
     fontSize: '1.5rem',
   },
+
 };
 
 export default function Home() {
 
-  const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
-  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+
   const isPhonePotrait = useMediaQuery({ query: '(max-width: 375px)' })
-  const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
-  const isRetina = useMediaQuery({ query: '(min-resolution: 2dppx)' })
-  // const user = useContext(userContext);
+
   const [editName, setEditName] = useState(false);
-  const inputNameRef = useRef<HTMLInputElement>(null);
-  const inputStockRef = useRef<HTMLInputElement>(null);
-  const inputUnitRef = useRef<HTMLInputElement>(null);
 
   const inputSearchRef = useRef<HTMLInputElement>(null);
 
@@ -99,8 +138,10 @@ export default function Home() {
   }
 
   const handleTambahBarang = (barangBaru: Barang) => {
+    const id = Math.random() * 100;
+    const barangBaruWithId = { ...barangBaru, id };
     setTambahBarang(false);
-    setBarangs([...barang, barangBaru]);
+    setBarangs([...barang, barangBaruWithId]);
   }
 
   const cancelTambahBarang = () => {
@@ -127,32 +168,35 @@ export default function Home() {
   }
   return (
     <div style={styles.container}>
-      <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={styles.welcomeContainer}>
         <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Warehouse Management</h1>
       </div>
       {!tambahBarang && <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', flexDirection: 'row', gap: '1rem', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+        <div style={styles.search}>
           <input type="text" placeholder="Search" ref={inputSearchRef} style={{ width: '300px' }} />
           <Button onClick={handleSearch}><Icons color="green" icon={searchIcon} /> Search</Button>
         </div>
-        <button onClick={() => setTambahBarang(true)}><Icons color="green" icon={plushIcon} /></button>
+        <Button onClick={() => setTambahBarang(true)}><Icons color="green" icon={plushIcon} />Tambah Barang</Button>
+        <ExportCSV csvData={barang} fileName="barang" />
       </div>}
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         {tambahBarang &&
-          <ModalTambahBarang tambah={handleTambahBarang} cancelTambahBarang={cancelTambahBarang} />
+          <div>
+            <ModalTambahBarang tambah={handleTambahBarang} cancelTambahBarang={cancelTambahBarang} />
+          </div>
         }
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', margin: '1.5rem' }}>
+        <div style={styles.table}>
           <div style={styles.tableHeader}>
-            <div style={{ width: '50%', alignItems: 'center', display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+            <div style={styles.tableHeaderName}>
               {isPhonePotrait ? <text>Name</text> : 'Name'}
             </div>
-            <div style={{ width: '20%', alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+            <div style={styles.tableHeaderStock}>
               Stock
             </div>
-            <div style={{ width: '10%', alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+            <div style={styles.tableHeaders}>
               Unit
             </div>
-            <div style={{ width: '20%', alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'row', gap: '1rem' }}>
+            <div style={styles.tableHeaders}>
               Action
             </div>
           </div>

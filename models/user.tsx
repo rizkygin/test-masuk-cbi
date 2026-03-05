@@ -28,7 +28,7 @@ export default async function getUser(userInput: userInput) {
     })
         .then((response) => { return response.json() })
         .then((data) => {
-            console.log(data);
+            // console.log(data);
             if (data.statusCode === 1) {
                 const user: user = {
                     berarToken: data.data.api_token,
@@ -38,9 +38,8 @@ export default async function getUser(userInput: userInput) {
                 }
                 localStorage.setItem('token', data.data.api_token);
                 sessionStorage.setItem('user', JSON.stringify(data.data));
-                return data.data;
+                return data;
             }
+            return data;
         })
-        .catch((error) => {
-        });
 }

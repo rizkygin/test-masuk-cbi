@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { Barang } from "@/models/barang";
 import { Button } from "@/src/components/ui/button";
-// import Button from "@/src/components/ui/button"
 
 type tambahBarangProps = {
     tambah: (barang: Barang) => void,
@@ -18,9 +17,11 @@ export default function ModalTambahBarang({ tambah, cancelTambahBarang }: tambah
         const name = inputNameRef.current?.value;
         const stock = inputStockRef.current?.value;
         const unit = inputUnitRef.current?.value;
-        console.log(name, stock, unit);
+        // console.log(name, stock, unit);
+        const random = Math.random() * 100;
+        const id = Math.round(random);
         const barangBaru: Barang = {
-            id: 0,
+            id: id,
             item_name: name?.toString() || '',
             stock: stock ? Number(stock) : 0,
             unit: unit?.toString() || '',
